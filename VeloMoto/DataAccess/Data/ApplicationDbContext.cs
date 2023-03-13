@@ -22,15 +22,15 @@ namespace DataAccess.Data
         public DbSet<Category> Category { get; set; }
         public DbSet<Price> Price { get; set; }
         public DbSet<Product> Product { get; set; }
-        //public DbSet<StatusOrder> StatusOrder { get; set; }
-        //public DbSet<SalesInvoice> SalesInvoice { get; set; }
-        //public DbSet<Provider> Provider { get; set; }
-        //public DbSet<PurchaseInvoice> PurchaseInvoice { get; set; }
-        //public DbSet<Sales> Sales { get; set; }
-        //public DbSet<Purchase> Purchase { get; set; }
-        //public DbSet<ApplicationUser> ApplicationUser { get; set; }
-        //public DbSet<Order> Order { get; set; }
-        //public DbSet<Images> Images { get; set; }
+        public DbSet<StatusOrder> StatusOrder { get; set; }
+        public DbSet<SalesInvoice> SalesInvoice { get; set; }
+        public DbSet<Provider> Provider { get; set; }
+        public DbSet<PurchaseInvoice> PurchaseInvoice { get; set; }
+        public DbSet<Sales> Sales { get; set; }
+        public DbSet<Purchase> Purchase { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<Images> Images { get; set; }
 
     }
  }
