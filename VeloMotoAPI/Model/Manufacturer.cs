@@ -14,6 +14,7 @@ namespace VeloMotoAPI.Model
 
         [Required]
         public string Name { get; set; }
+        [Required]
 
         public string NumberPhone { get; set; }
 

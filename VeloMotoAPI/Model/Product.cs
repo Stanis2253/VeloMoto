@@ -17,6 +17,7 @@ namespace VeloMotoApi.Model
         public string ShortDesc { get; set; }
         [Required]
         public bool IsActual { get; set; }
+        [Required]
 
         public int ManufacturerId { get; set; }
 
