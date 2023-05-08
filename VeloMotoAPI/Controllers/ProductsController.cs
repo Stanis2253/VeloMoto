@@ -67,28 +67,28 @@ namespace VeloMotoAPI.Controllers
         }
         [HttpPost]
         [Route ("Post")]
-        public async Task<ActionResult<ProductsDTO>> Post(ProductsDTO productDTO)
+        public async Task<ActionResult<ProductsDTO>> Post(ProductsDTO obj)
         {
-            if (productDTO == null)
+            if (obj == null)
             {
                 return BadRequest();
             }
             Products productToDb = new Products
             {
-                Name = productDTO.Name,
-                Description = productDTO.Description,
-                ShortDesc = productDTO.ShortDesc,
-                CategoryId = productDTO.CategoryId,
-                ManufacturerId = productDTO.ManufacturerId,
-                IsActual = productDTO.IsActual,
+                Name = obj.Name,
+                Description = obj.Description,
+                ShortDesc = obj.ShortDesc,
+                CategoryId = obj.CategoryId,
+                ManufacturerId = obj.ManufacturerId,
+                IsActual = obj.IsActual,
             };
             try
             {
-                productDTO.IdProduct = _context.Products.OrderByDescending(x => x).FirstOrDefault().IdProduct;
+                obj.IdProduct = _context.Products.OrderByDescending(x => x).FirstOrDefault().IdProduct;
                 _context.Products.Add(productToDb);
                 await _context.SaveChangesAsync();
 
-                return Ok(productDTO);
+                return Ok(obj);
             }
             catch (Exception ex)
             {
@@ -96,7 +96,7 @@ namespace VeloMotoAPI.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeleteById/{IdProduct}")]
+        [Route("DeleteById/{ProductId}")]
         public async Task<ActionResult> Delete(int ProductId)
         {
             var ProductToDelete = await _context.Products.FindAsync(ProductId);
@@ -114,22 +114,22 @@ namespace VeloMotoAPI.Controllers
 
         }
         [HttpPut]
-        [Route("PutById/{IdProduct}")]
-        public async Task<ActionResult> Put (ProductsDTO productsDTO)
+        [Route("Put")]
+        public async Task<ActionResult> Put (ProductsDTO obj)
         {
-            if (productsDTO != null)
+            if (obj != null)
             {
                 return BadRequest();
             }
             Products product = new Products
             {
-                Name = productsDTO.Name,
-                Description = productsDTO.Description,
-                ShortDesc = productsDTO.ShortDesc,
-                IdProduct = productsDTO.IdProduct,
-                ManufacturerId = productsDTO.ManufacturerId,
-                CategoryId = productsDTO.CategoryId,
-                IsActual = productsDTO.IsActual,
+                Name = obj.Name,
+                Description = obj.Description,
+                ShortDesc = obj.ShortDesc,
+                IdProduct = obj.IdProduct,
+                ManufacturerId = obj.ManufacturerId,
+                CategoryId = obj.CategoryId,
+                IsActual = obj.IsActual,
             };
             try
             {

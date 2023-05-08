@@ -1,6 +1,6 @@
 ﻿namespace VeloMotoAPI.Models.DTO
 {
-    public class PurchaseInvoiceDTO
+    public class PurchasesInvoiceDTO
     {
         public int Id { get; set; }
         public DateTime DateTime { get; set;}

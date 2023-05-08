@@ -18,10 +18,10 @@ namespace VeloMotoAPI.Models
         [ForeignKey("ProductId")]
         public virtual Products Product { get; set; }
         [Required]
-        public int PruchaseInvoiceId { get; set; }
+        public int PurchaseInvoiceId { get; set; }
 
-        [ForeignKey("PruchaseInvoiceId")]
-        public virtual PurchaseInvoice PurchaseInvoice { get; set; }
+        [ForeignKey("PurchaseInvoiceId")]
+        public virtual PurchasesInvoice PurchaseInvoice { get; set; }
         [Required]
         public int Amount { get; set; }
         [Required]

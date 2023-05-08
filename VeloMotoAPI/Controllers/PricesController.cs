@@ -67,26 +67,26 @@ namespace VeloMotoAPI.Controllers
         }
         [HttpPost]
         [Route("Post")]
-        public async Task<ActionResult<PricesDTO>> Post(PricesDTO pricesDTO)
+        public async Task<ActionResult<PricesDTO>> Post(PricesDTO obj)
         {
-            if (pricesDTO == null)
+            if (obj == null)
             {
                 return BadRequest();
             }
 
             Prices priceToDB = new Prices
             {
-                ProductId = pricesDTO.ProductId,
-                Value = pricesDTO.Value,
+                ProductId = obj.ProductId,
+                Value = obj.Value,
             };
             try
             {
                 _context.Add(priceToDB);
-                pricesDTO.Id = (_context.Prices.OrderByDescending(p => p.ProductId).FirstOrDefault().Id + 1);
-                pricesDTO.DateTime = DateTime.Now;
+                obj.Id = (_context.Prices.OrderByDescending(p => p.ProductId).FirstOrDefault().Id + 1);
+                obj.DateTime = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                return Ok(pricesDTO);
+                return Ok(obj);
             }
             catch (Exception ex)
             {

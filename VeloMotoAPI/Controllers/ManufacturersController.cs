@@ -48,15 +48,15 @@ namespace VeloMotoAPI.Controllers
             return Ok(result);
         }
         [HttpGet]
-        [Route("GetById/{Id}")]
-        public async Task<ActionResult<ManufacturersDTO>> GetById(int Id)
+        [Route("GetById/{ManufacturerId}")]
+        public async Task<ActionResult<ManufacturersDTO>> GetById(int ManufacturerId)
         {
-            if (Id == null)
+            if (ManufacturerId == null)
             {
                 return BadRequest();
             }
 
-            var manufacturer = await _context.Manufacturers.FindAsync(Id);
+            var manufacturer = await _context.Manufacturers.FindAsync(ManufacturerId);
 
             if (manufacturer == null)
             {
@@ -65,7 +65,7 @@ namespace VeloMotoAPI.Controllers
 
             ManufacturersDTO manufacturerDTO = new ManufacturersDTO 
             {
-                Id = Id,
+                Id = ManufacturerId,
                 Name = manufacturer.Name,
                 Description = manufacturer.Description,
                 Email = manufacturer.Email,
@@ -103,16 +103,16 @@ namespace VeloMotoAPI.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeleteById")]
-        public async Task<ActionResult> DeleteById(int Id)
+        [Route("DeleteById/{ManufacturerId}")]
+        public async Task<ActionResult> DeleteById(int ManufacturerId)
         {
-            if (Id == null)
+            if (ManufacturerId == null)
             {
                 return BadRequest();
             }
             try
             {
-                Manufacturers manufacturerToDelete = await _context.Manufacturers.FindAsync(Id);
+                Manufacturers manufacturerToDelete = await _context.Manufacturers.FindAsync(ManufacturerId);
                 _context.Remove(manufacturerToDelete);
                 await _context.SaveChangesAsync();
                 return Ok();
@@ -124,27 +124,27 @@ namespace VeloMotoAPI.Controllers
         }
         [HttpPut]
         [Route("Put")]
-        public async Task<ActionResult<ManufacturersDTO>> Put (ManufacturersDTO manufacturerDTO)
+        public async Task<ActionResult<ManufacturersDTO>> Put (ManufacturersDTO obj)
         {
-            if (manufacturerDTO == null)
+            if (obj == null)
             {
                 return BadRequest();
             }
 
             Manufacturers manufacturerPut = new Manufacturers
             {
-                Name = manufacturerDTO.Name,
-                NumberPhone = manufacturerDTO.NumberPhone,
-                Description = manufacturerDTO.Description,
-                Email = manufacturerDTO.Email
+                Name = obj.Name,
+                NumberPhone = obj.NumberPhone,
+                Description = obj.Description,
+                Email = obj.Email
             };
 
             try
             {
                 _context.Update(manufacturerPut);
                 await _context.SaveChangesAsync();
-                manufacturerDTO.Id = _context.Manufacturers.OrderByDescending(p=>p).First().Id;
-                return Ok(manufacturerDTO);
+                obj.Id = _context.Manufacturers.OrderByDescending(p=>p).First().Id;
+                return Ok(obj);
             }
             catch (Exception ex)
             {

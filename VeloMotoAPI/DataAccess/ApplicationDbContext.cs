@@ -14,7 +14,7 @@ namespace VeloMotoAPI.DataAccess
         public DbSet<Products> Products { get; set; }
         public DbSet<Images> Images { get; set; }
         public DbSet<Providers> Providers { get; set; }
-        public DbSet<PurchaseInvoice> PurchaseInvoice { get; set; }
+        public DbSet<PurchasesInvoice> PurchasesInvoice { get; set; }
         public DbSet<SalesInvoice> SalesInvoice { get; set; }
         public DbSet<Purchases> Purchases { get; set; }
         public DbSet<Sales> Sales { get; set; }

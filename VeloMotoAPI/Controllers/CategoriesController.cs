@@ -51,11 +51,11 @@ namespace VeloMotoAPI.Controllers
             return result;
         }
 
-        [Route("GetById/{Id}")]
+        [Route("GetById/{CategoryId}")]
         [HttpGet]
-        public async Task<ActionResult<CategoriesDTO>> GetById(int Id)
+        public async Task<ActionResult<CategoriesDTO>> GetById(int CategoryId)
         {
-            var category = _context.Categories.Find(Id);
+            var category = _context.Categories.Find(CategoryId);
 
             if (category == null)
             {
@@ -109,16 +109,16 @@ namespace VeloMotoAPI.Controllers
             }
         }
 
-        [Route ("DeleteById/{Id}")]
+        [Route ("DeleteById/{CategoryId}")]
         [HttpDelete]
-        public async Task<ActionResult> Delete(int Id)
+        public async Task<ActionResult> Delete(int CategoryId)
         {
-            if (Id == null)
+            if (CategoryId == null)
             {
                 return BadRequest();
             }
 
-            var CategoryToDelete = _context.Categories.Find(Id);
+            var CategoryToDelete = _context.Categories.Find(CategoryId);
 
             if (CategoryToDelete == null)
             {
@@ -140,18 +140,18 @@ namespace VeloMotoAPI.Controllers
 
         [Route("Put")]
         [HttpPut]
-        public async Task<ActionResult> Put(CategoriesDTO category)
+        public async Task<ActionResult> Put(CategoriesDTO obj)
         {
-            if (category == null)
+            if (obj == null)
             {
                 return BadRequest();
             }
 
             Categories categoryPut = new Categories
             {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description,
+                Id = obj.Id,
+                Name = obj.Name,
+                Description = obj.Description,
             };
 
             try

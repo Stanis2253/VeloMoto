@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VeloMotoAPI.Models
 {
-    public class PurchaseInvoice
+    public class PurchasesInvoice
     {
         [Key]
         public int Id { get; set; }
