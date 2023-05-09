@@ -103,6 +103,7 @@ namespace VeloMotoAPI.Controllers
                 _context.Sales.Remove(item);
             }
             var invoiceToDelete = await _context.SalesInvoice.FindAsync(salesInvoiceId);
+            _context.Remove(invoiceToDelete);
             try
             {
                 await _context.SaveChangesAsync();
