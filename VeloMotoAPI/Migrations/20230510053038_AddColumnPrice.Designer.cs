@@ -12,8 +12,8 @@ using VeloMotoAPI.DataAccess;
 namespace VeloMotoAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230508150910_CorrectlyName")]
-    partial class CorrectlyName
+    [Migration("20230510053038_AddColumnPrice")]
+    partial class AddColumnPrice
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -243,6 +243,9 @@ namespace VeloMotoAPI.Migrations
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

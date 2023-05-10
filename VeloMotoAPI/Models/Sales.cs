@@ -20,5 +20,7 @@ namespace VeloMotoAPI.Models
         public virtual SalesInvoice SalesInvoice { get; set; }
         [Required]
         public int Amount { get; set; }
+
+        public decimal Price { get; set; }
     }
 }

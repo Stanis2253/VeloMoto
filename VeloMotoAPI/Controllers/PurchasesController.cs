@@ -9,16 +9,16 @@ namespace VeloMotoAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PurchasessController : ControllerBase
+    public class PurchasesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public PurchasessController(ApplicationDbContext context)
+        public PurchasesController(ApplicationDbContext context)
         {
             _context = context;
         }
         [HttpGet]
         [Route("GetAll")]
-        public async Task<ActionResult<List<PurchasesVM>>> GetAll()
+        public async Task<ActionResult<List<PurchasesInvoiceVM>>> GetAll()
         {
             var purchasesInvoice = _context.PurchasesInvoice;
 
@@ -27,39 +27,42 @@ namespace VeloMotoAPI.Controllers
                 return NotFound();
             }
 
-            List<PurchasesVM> result = new List<PurchasesVM>();
+            List<PurchasesInvoiceVM> result = new List<PurchasesInvoiceVM>();
 
             foreach (var item in purchasesInvoice)
             {
                 PurchasesInvoiceDTO invoice = new PurchasesInvoiceDTO
                 {
+                    Id = item.Id,
                     DateTime = item.Date,
                 };
-                var sales = _context.Purchases.Where(p => p.PurchaseInvoiceId == invoice.Id);
-                List<PurchasesDTO> salesList = new List<PurchasesDTO>();
-                foreach (var sale in sales)
+                var purchases = _context.Purchases.Include(p=>p.Product).Where(p => p.PurchaseInvoiceId == invoice.Id);
+                List<PurchasesVM> purchasesList = new List<PurchasesVM>();
+                foreach (var purchase in purchases)
                 {
-                    PurchasesDTO saleDTO = new PurchasesDTO
+                    PurchasesVM purchVM = new PurchasesVM
                     {
-                        Id = sale.Id,
-                        ProductId = sale.ProductId,
-                        Amount = sale.Amount,
-                        PurchaseInvoiceId = sale.Id,
+                        Id = purchase.Id,
+                        ProductId = purchase.ProductId,
+                        ProductName = purchase.Product.Name,
+                        Amount = purchase.Amount,
+                        Price = purchase.Price,
+                        PurchaseInvoiceId = purchase.Id,
                     };
-                    salesList.Add(saleDTO);
+                    purchasesList.Add(purchVM);
                 }
-                PurchasesVM salesVM = new PurchasesVM
+                PurchasesInvoiceVM purchaseVM = new PurchasesInvoiceVM
                 {
                     Invoice = invoice,
-                    Purchases = salesList,
+                    Purchases = purchasesList,
                 };
-                result.Add(salesVM);
+                result.Add(purchaseVM);
             }
             return Ok(result);
         }
         [HttpPost]
         [Route("Post")]
-        public async Task<ActionResult<PurchasesVM>> Post(PurchasesVM purchasesVM)
+        public async Task<ActionResult<PurchasesInvoiceVM>> Post(PurchasesInvoiceVM purchasesVM)
         {
             if (purchasesVM == null)
             {
@@ -69,6 +72,7 @@ namespace VeloMotoAPI.Controllers
             {
                 Date = purchasesVM.Invoice.DateTime,
                 ProviderId = purchasesVM.Invoice.ProviderId,
+                
             };
             purchasesVM.Invoice.Id = _context.PurchasesInvoice.OrderByDescending(p=>p).First().Id;
             _context.Add(purchasesInvoiceToDB);
@@ -80,6 +84,7 @@ namespace VeloMotoAPI.Controllers
                     ProductId = item.ProductId,
                     Amount = item.Amount,
                     PurchaseInvoiceId = purchasesVM.Invoice.Id,
+                    Price = item.Price,
                 };
                 _context.Add(purchases);
             }

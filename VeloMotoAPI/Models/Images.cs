@@ -14,5 +14,6 @@ namespace VeloMotoAPI.Models
         public virtual Products Product { get; set; }
 
         public string IndexImg { get; set; }
+        public string Extension { get; set; }
     }
 }

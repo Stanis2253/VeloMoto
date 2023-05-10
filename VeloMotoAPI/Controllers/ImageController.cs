@@ -4,6 +4,7 @@ using VeloMotoAPI.DataAccess;
 using VeloMotoAPI.Models;
 using VeloMotoAPI.Models.DTO;
 using VeloMotoAPI.Utilities;
+using VeloMotoAPI.ViewModel;
 
 namespace VeloMotoAPI.Controllers
 {
@@ -12,10 +13,7 @@ namespace VeloMotoAPI.Controllers
     public class ImageController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-
-        private static IWebHostEnvironment _environment;
-
+        private readonly IWebHostEnvironment _environment;
         public ImageController(ApplicationDbContext context, IWebHostEnvironment webHost)
         {
             _context = context;
@@ -23,33 +21,35 @@ namespace VeloMotoAPI.Controllers
         }
         [HttpGet]
         [Route("GetByIdProduct/{ProductId}")]
-        public async Task<ActionResult<List<ImagesDTOToUser>>> GetByIdProduct(int ProductId)
+        public async Task<ActionResult> GetByIdProduct(int ProductId)
         {
             var images = await _context.Images.Where(p=>p.ProductId == ProductId).ToListAsync();
 
-            List<ImagesDTOToUser> result = new List<ImagesDTOToUser>();
+            List<ImagesVM> result = new List<ImagesVM>();
 
             foreach (var item in images)
             {
-                ImagesDTOToUser imageDTO = new ImagesDTOToUser
+                ImagesVM image = new ImagesVM
                 {
                     ProductId = item.ProductId,
+                    Path = _environment.WebRootPath + WC.PathProductImage + item.IndexImg + item.Extension,
                 };
+                result.Add(image);
+                //string pathImage = _environment.WebRootPath + WC.PathProductImage + item.IndexImg + ".png";
+                ////C:\Users\stani\Work\VeloMoto\VeloMotoAPI\wwwroot\images\product\327804f6-6507-4b81-814b-b72a489af85e.png
+                //using (FileStream fs = new FileStream(pathImage, FileMode.Open))
+                //{
+                //    imageDTO.Image = new FormFile(fs,0, fs.Length,"img", "img");
+                //}
+                //result.Add(imageDTO);
 
-                string pathImage = _environment.WebRootPath + WC.PathProductImage + item.IndexImg + ".png";
-                //C:\Users\stani\Work\VeloMoto\VeloMotoAPI\wwwroot\images\product\327804f6-6507-4b81-814b-b72a489af85e.png
-                using (FileStream fs = new FileStream(pathImage, FileMode.Open))
-                {
-                    imageDTO.Image = new FormFile(fs,0, fs.Length,"img", "img");
-                }
-                result.Add(imageDTO);
             }
             return Ok(result);
         }
 
         [HttpPost]
         [Route("Post")]
-        public async Task<ActionResult> Post([FromForm]ImagesDTOUploud imagesDTOs)
+        public async Task<ActionResult> Post([FromForm]ImagesDTO imagesDTOs)
         {
             if (imagesDTOs == null)
             {
@@ -68,6 +68,7 @@ namespace VeloMotoAPI.Controllers
                 {
                     IndexImg = fileName,
                     ProductId = imagesDTOs.ProductId,
+                    Extension = extension,
                 };
                 _context.Add(image);
             }

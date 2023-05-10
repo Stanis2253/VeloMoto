@@ -19,37 +19,38 @@ namespace VeloMotoAPI.Controllers
         }
         [HttpGet]
         [Route("GetAll")]
-        public async Task<ActionResult<List<SalesVM>>> GetAll()
+        public async Task<ActionResult<List<SalesInvoiceVM>>> GetAll()
         {
-            var salesInvoice = _context.SalesInvoice;
-
+            var salesInvoice = await _context.SalesInvoice.ToListAsync();
             if (salesInvoice == null)
             {
                 return NotFound();
             }
-
-            List<SalesVM> result = new List<SalesVM>();
-
+            List<SalesInvoiceVM> result = new List<SalesInvoiceVM>();
             foreach (var item in salesInvoice)
             {
                 SalesInvoiceDTO invoice = new SalesInvoiceDTO
                 {
                     DateTime = item.Date,
+                    Id = item.Id,
                 };
-                var sales = _context.Sales.Where(p => p.SalesInvoiceId == invoice.Id);
-                List<SalesDTO> salesList = new List<SalesDTO>();
+                var sales = await _context.Sales.Include(p=>p.Product).Where(p => p.SalesInvoiceId == invoice.Id).ToListAsync();
+                List<SalesVM> salesList = new List<SalesVM>();
                 foreach (var sale in sales)
                 {
-                    SalesDTO saleDTO = new SalesDTO
+                    var prices = _context.Prices.OrderByDescending(p => p).FirstOrDefault(p => p.ProductId == sale.ProductId);
+                    SalesVM saleVM = new SalesVM
                     {
                         Id = sale.Id,
                         ProductId = sale.ProductId,
                         Amount = sale.Amount,
                         SalesInvoiceId = sale.Id,
+                        ProductName = sale.Product.Name,
+                        Price = sale.Price,
                     };
-                    salesList.Add(saleDTO);
+                    salesList.Add(saleVM);
                 }
-                SalesVM salesVM = new SalesVM
+                SalesInvoiceVM salesVM = new SalesInvoiceVM
                 {
                     Invoice = invoice,
                     Sales = salesList,
@@ -61,7 +62,7 @@ namespace VeloMotoAPI.Controllers
         }
         [HttpPost]
         [Route("Post")]
-        public async Task<ActionResult> Post(SalesVM salesVM)
+        public async Task<ActionResult> Post(SalesInvoiceVM salesVM)
         {
             if (salesVM == null)
             {
@@ -69,7 +70,8 @@ namespace VeloMotoAPI.Controllers
             }
             SalesInvoice salesInvoiceToDb = new SalesInvoice
             {
-                Date = DateTime.Now,
+                Date = salesVM.Invoice.DateTime,
+
             };
             _context.Add(salesInvoiceToDb);
             foreach (var item in salesVM.Sales)
@@ -80,6 +82,8 @@ namespace VeloMotoAPI.Controllers
                     ProductId = item.ProductId,
                     Amount = item.Amount,
                     SalesInvoiceId = _context.SalesInvoice.OrderByDescending(p => p).First().Id,
+                    Price = item.Price,
+                    SalesInvoice = salesInvoiceToDb
                 };
                 _context.Add(sales);
             }
