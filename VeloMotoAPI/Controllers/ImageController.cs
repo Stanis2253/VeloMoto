@@ -4,7 +4,7 @@ using VeloMotoAPI.DataAccess;
 using VeloMotoAPI.Models;
 using VeloMotoAPI.Models.DTO;
 using VeloMotoAPI.Utilities;
-using VeloMotoAPI.ViewModel;
+using VeloMotoAPI.ViewModels;
 
 namespace VeloMotoAPI.Controllers
 {
@@ -35,14 +35,6 @@ namespace VeloMotoAPI.Controllers
                     Path = _environment.WebRootPath + WC.PathProductImage + item.IndexImg + item.Extension,
                 };
                 result.Add(image);
-                //string pathImage = _environment.WebRootPath + WC.PathProductImage + item.IndexImg + ".png";
-                ////C:\Users\stani\Work\VeloMoto\VeloMotoAPI\wwwroot\images\product\327804f6-6507-4b81-814b-b72a489af85e.png
-                //using (FileStream fs = new FileStream(pathImage, FileMode.Open))
-                //{
-                //    imageDTO.Image = new FormFile(fs,0, fs.Length,"img", "img");
-                //}
-                //result.Add(imageDTO);
-
             }
             return Ok(result);
         }

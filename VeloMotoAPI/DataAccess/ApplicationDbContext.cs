@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using VeloMotoAPI.Models;
 
 namespace VeloMotoAPI.DataAccess
 {
-    public class ApplicationDbContext : DbContext 
+    public class ApplicationDbContext : IdentityUserContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -18,8 +20,10 @@ namespace VeloMotoAPI.DataAccess
         public DbSet<SalesInvoice> SalesInvoice { get; set; }
         public DbSet<Purchases> Purchases { get; set; }
         public DbSet<Sales> Sales { get; set; }
-
         public DbSet<Prices> Prices { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<Orders> Orders { get; set; }
+        public DbSet<StatusOrders> StatusOrders { get; set; }
 
     }
 }

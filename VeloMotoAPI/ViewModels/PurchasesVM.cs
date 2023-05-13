@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using VeloMotoAPI.Models;
 
-namespace VeloMotoAPI.ViewModel
+namespace VeloMotoAPI.ViewModels
 {
-    public class SalesVM
+    public class PurchasesVM
     {
         public int Id { get; set; }
-        public int SalesInvoiceId { get; set; }
+        public int PurchaseInvoiceId { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public int Amount { get; set; }

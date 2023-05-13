@@ -2,7 +2,7 @@
 
 namespace VeloMotoAPI.Models
 {
-    public class StatusOrder
+    public class StatusOrders
     {
         [Key]
         public int Id { get; set; }

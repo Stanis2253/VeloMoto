@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace VeloMotoAPI.Models
+namespace VeloMotoAPI.Models.DTO
 {
-    public class SalesInvoice
+    public class OrdersDTO
     {
-        [Key]
         public int Id { get; set; }
-        [Required]
-
-        public DateTime Date { get; set; }
-
+        public int SalesInvoiceId { get; set; }
+        public string UserId { get; set; }
     }
 }

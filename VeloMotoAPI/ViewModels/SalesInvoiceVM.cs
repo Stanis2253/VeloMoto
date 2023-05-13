@@ -1,6 +1,6 @@
 ﻿using VeloMotoAPI.Models.DTO;
 
-namespace VeloMotoAPI.ViewModel
+namespace VeloMotoAPI.ViewModels
 {
     public class SalesInvoiceVM
     {

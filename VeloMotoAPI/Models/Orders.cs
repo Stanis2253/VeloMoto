@@ -13,10 +13,8 @@ namespace VeloMotoAPI.Models
 
         [ForeignKey("SalesInvoiceId")]
         public virtual SalesInvoice SalesInvoice { get; set; }
-
-        public int StatusId { get; set; }
-
-        [ForeignKey("StatusId")]
-        public virtual StatusOrder StatusOrder { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual ApplicationUser User { get; set; }
     }
 }

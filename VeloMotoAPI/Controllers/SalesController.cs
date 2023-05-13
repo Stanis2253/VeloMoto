@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using VeloMotoAPI.DataAccess;
 using VeloMotoAPI.Models;
 using VeloMotoAPI.Models.DTO;
-using VeloMotoAPI.ViewModel;
+using VeloMotoAPI.ViewModels;
 
 namespace VeloMotoAPI.Controllers
 {
