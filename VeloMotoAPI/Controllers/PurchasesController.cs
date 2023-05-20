@@ -103,12 +103,13 @@ namespace VeloMotoAPI.Controllers
         public async Task<ActionResult> Delete (int purchasesInvoiceId)
         {
             var purchasesToDelete = await _context.Purchases.Where(p=>p.PurchaseInvoiceId == purchasesInvoiceId).ToListAsync();
-            foreach (var purchase in purchasesToDelete)
-            {
-                _context.Purchases.Remove(purchase);
-            }
+
+            _context.RemoveRange(purchasesToDelete);
+
             var invoiceToDelete = await _context.PurchasesInvoice.FindAsync(purchasesInvoiceId);
+
             _context.Remove(invoiceToDelete);
+
             try
             {
                 await _context.SaveChangesAsync();

@@ -10,6 +10,11 @@ namespace VeloMotoAPI.Models
         [Required]
 
         public DateTime Date { get; set; }
+        [Required]
+        public int StatusId { get; set; }
 
+
+        [ForeignKey("StatusId")]
+        public virtual StatusOrders StatusOrder { get; set; }
     }
 }
