@@ -33,6 +33,7 @@ namespace VeloMotoAPI.Controllers
                 {
                     DateTime = item.Date,
                     Id = item.Id,
+                    StatusId = item.StatusId,
                 };
                 var sales = await _context.Sales.Include(p=>p.Product).Where(p => p.SalesInvoiceId == invoice.Id).ToListAsync();
                 List<SalesVM> salesList = new List<SalesVM>();
@@ -71,6 +72,7 @@ namespace VeloMotoAPI.Controllers
             SalesInvoice salesInvoiceToDb = new SalesInvoice
             {
                 Date = salesVM.Invoice.DateTime,
+                StatusId = salesVM.Invoice.StatusId,
 
             };
             _context.Add(salesInvoiceToDb);

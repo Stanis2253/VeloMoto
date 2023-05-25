@@ -42,7 +42,8 @@ namespace VeloMotoAPI.Controllers
                 SalesInvoiceDTO salesInvoiceDTO = new SalesInvoiceDTO
                 {
                     Id = order.SalesInvoiceId,
-                    DateTime = order.SalesInvoice.Date
+                    DateTime = order.SalesInvoice.Date,
+                    StatusId = order.SalesInvoice.StatusId
                 };
 
                 var sales = await _context.Sales.Where(p => p.SalesInvoiceId == order.SalesInvoiceId).Include(p => p.Product).ToListAsync();
@@ -86,7 +87,9 @@ namespace VeloMotoAPI.Controllers
             SalesInvoiceDTO salesInvoiceDTO = new SalesInvoiceDTO
             {
                 Id = order.SalesInvoiceId,
-                DateTime = order.SalesInvoice.Date
+                DateTime = order.SalesInvoice.Date,
+                StatusId = order.SalesInvoice.StatusId,
+
             };
 
             var sales = await _context.Sales.Where(p => p.SalesInvoiceId == order.SalesInvoiceId).Include(p => p.Product).ToListAsync();
@@ -126,6 +129,7 @@ namespace VeloMotoAPI.Controllers
             SalesInvoice salesInvoice = new SalesInvoice
             {
                 Date = ordersVM.Invoice.Invoice.DateTime,
+                StatusId = ordersVM.Invoice.Invoice.StatusId,
             };
             
             foreach (var item in ordersVM.Invoice.Sales)

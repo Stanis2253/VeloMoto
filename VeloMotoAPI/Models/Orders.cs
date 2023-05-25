@@ -18,6 +18,6 @@ namespace VeloMotoAPI.Models
         [Required]
         public string UserId { get; set; }
         [ForeignKey("UserId")]
-        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationUsers User { get; set; }
     }
 }

@@ -21,9 +21,12 @@ namespace VeloMotoAPI.DataAccess
         public DbSet<Purchases> Purchases { get; set; }
         public DbSet<Sales> Sales { get; set; }
         public DbSet<Prices> Prices { get; set; }
-        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<ApplicationUsers> Users { get; set; }
+        public DbSet<ApplicationRoles> Roles { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<StatusOrders> StatusOrders { get; set; }
+
+
 
     }
 }

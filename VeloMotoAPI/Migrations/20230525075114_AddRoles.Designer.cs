@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VeloMotoAPI.DataAccess;
 
@@ -11,9 +12,11 @@ using VeloMotoAPI.DataAccess;
 namespace VeloMotoAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230525075114_AddRoles")]
+    partial class AddRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -496,15 +499,9 @@ namespace VeloMotoAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RolesId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("RolesId");
 
                     b.HasDiscriminator().HasValue("ApplicationUsers");
                 });
@@ -662,17 +659,6 @@ namespace VeloMotoAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("StatusOrder");
-                });
-
-            modelBuilder.Entity("VeloMotoAPI.Models.ApplicationUsers", b =>
-                {
-                    b.HasOne("VeloMotoAPI.Models.ApplicationRoles", "Roles")
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }
