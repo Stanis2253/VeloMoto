@@ -18,6 +18,10 @@ namespace VeloMotoAPI.Models
 
         [ForeignKey("SalesInvoiceId")]
         public virtual SalesInvoice SalesInvoice { get; set; }
+        public int StatusId { get; set; }
+
+        [ForeignKey("StatusId")]
+        public virtual StatusOrders StatusOrder { get; set; }
         [Required]
         public int Amount { get; set; }
 

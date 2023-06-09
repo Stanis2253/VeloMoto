@@ -72,23 +72,27 @@ namespace VeloMotoAPI.Controllers
             SalesInvoice salesInvoiceToDb = new SalesInvoice
             {
                 Date = salesVM.Invoice.DateTime,
-                StatusId = salesVM.Invoice.StatusId,
+                StatusId = 1,
 
             };
             _context.Add(salesInvoiceToDb);
+            List<Sales> salesListToDb = new List<Sales>();
             foreach (var item in salesVM.Sales)
             {
-                item.Id = _context.Sales.OrderByDescending(p => p).First().Id;
+                //item.Id = _context.Sales.OrderByDescending(p => p).First().Id;
                 Sales sales = new Sales
                 {
+
                     ProductId = item.ProductId,
                     Amount = item.Amount,
-                    SalesInvoiceId = _context.SalesInvoice.OrderByDescending(p => p).First().Id,
+                    SalesInvoiceId = 1,
                     Price = item.Price,
-                    SalesInvoice = salesInvoiceToDb
+                    
+                    
                 };
-                _context.Add(sales);
+                salesListToDb.Add(sales);
             }
+            _context.Sales.AddRange(salesListToDb);
             try
             {
                 await _context.SaveChangesAsync();

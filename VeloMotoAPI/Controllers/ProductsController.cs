@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VeloMotoAPI.DataAccess;
 using VeloMotoAPI.Models;
 using VeloMotoAPI.Models.DTO;
@@ -39,6 +40,7 @@ namespace VeloMotoAPI.Controllers
                     CategoryId = product.CategoryId,
                     ManufacturerId = product.ManufacturerId,
                     IsActual = product.IsActual,
+                    Price = _context.Prices.FirstOrDefault(p=>p.ProductId==p.ProductId).Value,
                 };
                 result.Add(productsDTO);
             }
@@ -65,6 +67,63 @@ namespace VeloMotoAPI.Controllers
             };
             return Ok(productDTO);
         }
+        [HttpGet]
+        [Route("GetSearch")]
+        public async Task<ActionResult> Search(string searchString)
+        {
+            var products = await _context.Products.Where(search => search.Name.StartsWith(searchString.ToLower())).ToListAsync();
+            if (products == null)
+                return NotFound();
+
+            List<ProductsDTO> result = new List<ProductsDTO>();
+
+            foreach (var product in products)
+            {
+                ProductsDTO productsDTO = new ProductsDTO
+                {
+                    IdProduct = product.IdProduct,
+                    Name = product.Name,
+                    Description = product.Description,
+                    ShortDesc = product.ShortDesc,
+                    CategoryId = product.CategoryId,
+                    ManufacturerId = product.ManufacturerId,
+                    IsActual = product.IsActual,
+                    Price = _context.Prices.FirstOrDefault(p => p.ProductId == p.ProductId).Value,
+                };
+                result.Add(productsDTO);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("FilterByCategory")]
+        public async Task<ActionResult> FilterByCategory(string criteria)
+        {
+            if (criteria == null || criteria == "" || criteria.Length == 0)
+                return BadRequest();
+            var filteredByCategory = _context.Products.Where(p=>p.Category.Name == criteria);
+
+            List<ProductsDTO> result = new List<ProductsDTO>();
+
+            foreach (var product in filteredByCategory)
+            {
+                ProductsDTO productsDTO = new ProductsDTO
+                {
+                    IdProduct = product.IdProduct,
+                    Name = product.Name,
+                    Description = product.Description,
+                    ShortDesc = product.ShortDesc,
+                    CategoryId = product.CategoryId,
+                    ManufacturerId = product.ManufacturerId,
+                    IsActual = product.IsActual,
+                    Price = _context.Prices.FirstOrDefault(p => p.ProductId == p.ProductId).Value,
+                };
+                result.Add(productsDTO);
+            }
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route ("Post")]
         public async Task<ActionResult<ProductsDTO>> Post(ProductsDTO obj)

@@ -20,5 +20,7 @@ namespace VeloMotoAPI.Models.DTO
 
         public int CategoryId { get; set; }
 
+        public decimal Price { get; set; }
+
     }
 }

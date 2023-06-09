@@ -17,10 +17,6 @@ namespace VeloMotoAPI.Models
 
         [ForeignKey("ProviderId")]
         public virtual Providers Provider { get; set; }
-        public int StatusId { get; set; }
-
-        [ForeignKey("StatusId")]
-        public virtual StatusOrders StatusOrder { get; set; }
 
         [Required]
         public DateTime Date { get; set; }
