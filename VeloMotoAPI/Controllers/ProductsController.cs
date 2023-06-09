@@ -102,24 +102,51 @@ namespace VeloMotoAPI.Controllers
         {
             if (criteria == null || criteria == "" || criteria.Length == 0)
                 return BadRequest();
-            var filteredByCategory = _context.Products.Where(p=>p.Category.Name == criteria);
+
+            string value = criteria.ToLower();
 
             List<ProductsDTO> result = new List<ProductsDTO>();
 
-            foreach (var product in filteredByCategory)
+
+            if (value == "categories")
             {
-                ProductsDTO productsDTO = new ProductsDTO
+                var productsFromDb = _context.Products.OrderBy(p => p.Category);
+
+                foreach (var product in productsFromDb)
                 {
-                    IdProduct = product.IdProduct,
-                    Name = product.Name,
-                    Description = product.Description,
-                    ShortDesc = product.ShortDesc,
-                    CategoryId = product.CategoryId,
-                    ManufacturerId = product.ManufacturerId,
-                    IsActual = product.IsActual,
-                    Price = _context.Prices.FirstOrDefault(p => p.ProductId == p.ProductId).Value,
-                };
-                result.Add(productsDTO);
+                    ProductsDTO productsDTO = new ProductsDTO
+                    {
+                        IdProduct = product.IdProduct,
+                        Name = product.Name,
+                        Description = product.Description,
+                        ShortDesc = product.ShortDesc,
+                        CategoryId = product.CategoryId,
+                        ManufacturerId = product.ManufacturerId,
+                        IsActual = product.IsActual,
+                        Price = _context.Prices.FirstOrDefault(p => p.ProductId == p.ProductId).Value,
+                    };
+                    result.Add(productsDTO);
+                }
+            }
+            if (value == "manufacturers")
+            {
+                var productsFromDb = _context.Products.OrderBy(p => p.Manufacturer);
+
+                foreach (var product in productsFromDb)
+                {
+                    ProductsDTO productsDTO = new ProductsDTO
+                    {
+                        IdProduct = product.IdProduct,
+                        Name = product.Name,
+                        Description = product.Description,
+                        ShortDesc = product.ShortDesc,
+                        CategoryId = product.CategoryId,
+                        ManufacturerId = product.ManufacturerId,
+                        IsActual = product.IsActual,
+                        Price = _context.Prices.FirstOrDefault(p => p.ProductId == p.ProductId).Value,
+                    };
+                    result.Add(productsDTO);
+                }
             }
             return Ok(result);
         }
