@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VeloMotoAPI.DataAccess;
-using VeloMotoAPI.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using VeloMotoAPI.Models.DTO;
+using VeloMotoAPI.Services.Interfaces;
 
 namespace VeloMotoAPI.Controllers
 {
@@ -11,158 +8,98 @@ namespace VeloMotoAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
-
+        [HttpGet]
         [Route("GetAll")]
-        [HttpGet]
-        public async Task <ActionResult<List<CategoriesDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CategoriesDTO>>> GetAll()
         {
-            var categories = _context.Categories;
-
-            if (categories == null)
-            {
-                return NotFound();
-            }
-
-            List<CategoriesDTO> result = new List<CategoriesDTO>();
-
-            foreach (var item in categories)
-            {
-                CategoriesDTO categoryDTO = new CategoriesDTO
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Description = item.Description,
-                };
-                result.Add(categoryDTO);
-            }
-
-            if (result.Count <= 0)
-            {
-                return BadRequest();
-            }
-
-            return result;
+            var categories = await _categoryService.GetAllAsync();
+            return Ok(categories);
         }
 
-        [Route("GetById/{CategoryId}")]
         [HttpGet]
+        [Route("GetById/{CategoryId}")]
         public async Task<ActionResult<CategoriesDTO>> GetById(int CategoryId)
         {
-            var category = _context.Categories.Find(CategoryId);
-
+            var category = await _categoryService.GetByIdAsync(CategoryId);
             if (category == null)
-            {
                 return NotFound();
-            }
 
-
-            CategoriesDTO result = new CategoriesDTO
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description,
-            };
-
-            if (result == null)
-            {
-                return BadRequest();
-            }
-
-            return result;
+            return Ok(category);
         }
 
-        [Route ("Post")]
-        [HttpPost]
-        public async Task<ActionResult> Post(CategoriesDTO obj)
+        [HttpGet]
+        [Route("GetByName/{name}")]
+        public async Task<ActionResult<CategoriesDTO>> GetByName(string name)
         {
-
-            if (obj.Name == null)
-            {
-                return BadRequest();
-            }
-
-            Categories categoryToDb = new Categories
-            {
-                Name = obj.Name,
-                Description = obj.Description,
-            };
-            if (categoryToDb == null)
-            {
-                return BadRequest(obj);
-            }
             try
             {
-                _context.Add(categoryToDb);
-                await _context.SaveChangesAsync();
-                return Ok();
+                var category = await _categoryService.GetByNameAsync(name);
+                if (category == null)
+                    return NotFound();
+
+                return Ok(category);
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
-        [Route ("DeleteById/{CategoryId}")]
+        [HttpPost]
+        [Route("Post")]
+        public async Task<ActionResult<CategoriesDTO>> Post(CategoriesDTO categoryDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var result = await _categoryService.AddAsync(categoryDto);
+                return CreatedAtAction(nameof(GetById), new { CategoryId = result.Id }, result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete]
+        [Route("DeleteById/{CategoryId}")]
         public async Task<ActionResult> Delete(int CategoryId)
         {
-            if (CategoryId == null)
-            {
-                return BadRequest();
-            }
-
-            var CategoryToDelete = _context.Categories.Find(CategoryId);
-
-            if (CategoryToDelete == null)
-            {
-                return NotFound();
-            }
-
-
             try
             {
-                _context.Remove(CategoryToDelete);
-                await _context.SaveChangesAsync();
+                await _categoryService.DeleteAsync(CategoryId);
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
-        [Route("Put")]
         [HttpPut]
-        public async Task<ActionResult> Put(CategoriesDTO obj)
+        [Route("Put")]
+        public async Task<ActionResult> Put(CategoriesDTO categoryDto)
         {
-            if (obj == null)
-            {
-                return BadRequest();
-            }
-
-            Categories categoryPut = new Categories
-            {
-                Id = obj.Id,
-                Name = obj.Name,
-                Description = obj.Description,
-            };
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             try
             {
-                _context.Update(categoryPut);
-                _context.SaveChanges();
+                await _categoryService.UpdateAsync(categoryDto);
                 return Ok();
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }
